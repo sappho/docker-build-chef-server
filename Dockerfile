@@ -16,4 +16,6 @@ VOLUME /opt/opscode
 VOLUME /var/opt/opscode
 VOLUME /var/log/opscode
 
+EXPOSE 443
+
 CMD /opt/start-chef-server.sh
