@@ -1,0 +1,8 @@
+#!/bin/bash
+/opt/opscode/embedded/bin/runsvdir-start &
+if [ -f /etc/opscode/chef-server-running.json ]; then
+    chef-server-ctl start
+else
+    chef-server-ctl reconfigure
+fi
+tail -f /var/log/opscode/*/current
