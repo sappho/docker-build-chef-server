@@ -1,4 +1,5 @@
 #!/bin/bash
+rm -fv /opt/opscode/embedded/service/oc_id/tmp/pids/server.pid
 /opt/opscode/embedded/bin/runsvdir-start &
 if [ -f /etc/opscode/chef-server-running.json ]; then
     chef-server-ctl start
