@@ -9,7 +9,7 @@ ARG download_link=https://packages.chef.io/stable/ubuntu/14.04/chef-server-core_
 RUN curl --fail --silent --location --retry 3 $download_link > /opt/chef-server.deb && \
     dpkg -i /opt/chef-server.deb && rm -fv /opt/chef-server.deb
 
-ADD opt /opt/
+ADD bin /usr/local/bin/
 ADD etc /etc/
 
 RUN groupadd -g 999 -r opscode && groupadd -g 998 -r opscode-pgsql && \
@@ -24,4 +24,4 @@ VOLUME /var/log/opscode
 
 EXPOSE 443
 
-CMD /opt/start-chef-server.sh
+CMD start-chef-server

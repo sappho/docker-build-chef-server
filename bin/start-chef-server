@@ -1,9 +1,13 @@
 #!/bin/bash
+echo Removing server PID that might have been left in place on the last shutdown ...
 rm -fv /opt/opscode/embedded/service/oc_id/tmp/pids/server.pid
+echo Running Chef Server bootstrapper ...
 /opt/opscode/embedded/bin/runsvdir-start &
 if [ -f /etc/opscode/chef-server-running.json ]; then
+    echo Starting Chef Server ...
     chef-server-ctl start
 else
+    echo Building complete Chef Server ...
     chef-server-ctl reconfigure
 fi
 tail -f /var/log/opscode/*/current

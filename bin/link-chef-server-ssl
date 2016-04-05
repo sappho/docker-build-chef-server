@@ -1,0 +1,12 @@
+#!/bin/bash
+if [ -f /etc/ssl/private/chef-server.key ]; then
+    echo Patching in SSL private key ...
+    ln -sfv /etc/ssl/private/chef-server.key `ls /var/opt/opscode/nginx/ca/*.key`
+fi
+if [ -f /etc/ssl/private/chef-server.crt ]; then
+    echo Patching in SSL certificate bundle ...
+    ln -sfv /etc/ssl/private/chef-server.crt `ls /var/opt/opscode/nginx/ca/*.crt`
+fi
+echo Reconfiguring to patch in SSL changes ...
+chef-server-ctl reconfigure
+chef-server-ctl restart
