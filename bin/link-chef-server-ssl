@@ -8,5 +8,5 @@ if [ -f /etc/ssl/private/chef-server.crt ]; then
     ln -sfv /etc/ssl/private/chef-server.crt `ls /var/opt/opscode/nginx/ca/*.crt`
 fi
 echo Reconfiguring to patch in SSL changes ...
+chef-server-ctl stop
 chef-server-ctl reconfigure
-chef-server-ctl restart
