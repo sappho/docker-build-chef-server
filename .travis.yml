@@ -1,0 +1,17 @@
+env:
+  global:
+    - DOCKER_VERSION=1.10.3~trusty
+
+sudo: required
+
+services:
+  - docker
+
+install:
+  - apt-cache madison docker-engine
+  - sudo apt-get -o Dpkg::Options::="--force-confnew" install -y docker-engine=$DOCKER_VERSION
+
+script:
+  - sudo docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+  - sudo ./build.sh
+  - sudo docker logout

@@ -24,7 +24,7 @@ Create a data volue container like this:
 
 Run a server with a command like this:
 
-    docker run -ti --name chef --privileged --volumes-from chef-data -p 443:443 \
+    docker run -ti --name chef -h chef --privileged --volumes-from chef-data -p 443:443 \
         -d --restart always sappho/chef-server
 
 This will cause one of two initialisation processes to run, depending on context:

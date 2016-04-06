@@ -8,6 +8,7 @@ if [ -f /etc/opscode/chef-server-running.json ]; then
     chef-server-ctl start
 else
     echo Building complete Chef Server ...
+    . create-chef-server-configuration
     chef-server-ctl reconfigure
 fi
 tail -f /var/log/opscode/*/current

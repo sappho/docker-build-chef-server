@@ -23,5 +23,8 @@ EXPOSE 443
 
 CMD start-chef-server
 
+ENV DOWNLOAD_LINK $download_link
+ENV NOTIFICATION_EMAIL nobody@example.com
+
 ADD etc /etc/
 ADD bin /usr/local/bin/

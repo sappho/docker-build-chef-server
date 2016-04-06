@@ -1,0 +1,9 @@
+#!/bin/bash
+cat > /etc/opscode/chef-server.rb <<EOF
+ip_version 'ipv4'
+notification_email '$NOTIFICATION_EMAIL'
+rabbitmq['node_ip_address'] = '0.0.0.0'
+EOF
+echo Content of /etc/opscode/chef-server.rb ...
+cat /etc/opscode/chef-server.rb
+echo -----------------
