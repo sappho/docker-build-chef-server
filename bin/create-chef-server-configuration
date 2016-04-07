@@ -1,8 +1,11 @@
 #!/bin/bash
 cat > /etc/opscode/chef-server.rb <<EOF
+api_fqdn '`cat /etc/hostname`'
 ip_version 'ipv4'
 notification_email '$NOTIFICATION_EMAIL'
 rabbitmq['node_ip_address'] = '0.0.0.0'
+nginx['ssl_certificate'] = '/etc/ssl/private/chef-server.crt'
+nginx['ssl_certificate_key'] = '/etc/ssl/private/chef-server.key'
 EOF
 echo Content of /etc/opscode/chef-server.rb ...
 cat /etc/opscode/chef-server.rb
