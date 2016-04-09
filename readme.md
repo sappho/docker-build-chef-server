@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/sappho/docker-build-chef-server.svg?branch=master)](https://travis-ci.org/sappho/docker-build-chef-server)
+[![Build Status](https://travis-ci.org/sappho/docker-build-chef-server.svg?branch=master)](https://travis-ci.org/sappho/docker-build-chef-server) [![GitHub issues](https://img.shields.io/github/issues/sappho/docker-build-chef-server.svg)](https://github.com/sappho/docker-build-chef-server/issues) [![GitHub forks](https://img.shields.io/github/forks/sappho/docker-build-chef-server.svg)](https://github.com/sappho/docker-build-chef-server/network) [![GitHub stars](https://img.shields.io/github/stars/sappho/docker-build-chef-server.svg)](https://github.com/sappho/docker-build-chef-server/stargazers) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/sappho/docker-build-chef-server/master/LICENSE)
 
 # Challenges
 
