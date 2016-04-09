@@ -1,4 +1,6 @@
-# Challenges of Running Chef Server in a Docker Container
+[![Build Status](https://travis-ci.org/sappho/docker-build-chef-server.svg?branch=master)](https://travis-ci.org/sappho/docker-build-chef-server)
+
+# Challenges
 
 [Chef Server](https://www.chef.io/chef/) is a collection of a number of services that all normally run as background daemons - somewhat different to the normal Docker thing of interconnected single-app containers. This image is built on the standard Ubuntu Trusty image but I'm looking into the possibility that it should be based on something like the [Phusion Base Image](http://phusion.github.io/baseimage-docker/) - watch this space.
 
@@ -14,19 +16,32 @@ Tags correspond in name to the version of the [Chef Server](https://www.chef.io/
 
 The source code for this image is on GitHub at [sappho/docker-build-chef-server](https://github.com/sappho/docker-build-chef-server). It is distributed under the [MIT license](https://opensource.org/licenses/MIT). Contributions are welcome - please fork and submit pull requests.
 
-[![Build Status](https://travis-ci.org/sappho/docker-build-chef-server.svg?branch=master)](https://travis-ci.org/sappho/docker-build-chef-server)
+# SSL
 
-# Building a Data Volume Container for Persistence
+To use Chef Server in a production environment, and really any environment, you should use a properly generated private key and SSL certificate to secure access to the exposed HTTPS port. While this Docker image can be run as is, you should create and build your own image which adds your private key and SSL certificate. You can fork [a sample GitHub repository](https://github.com/sappho/docker-build-chef-server-ssl) to help with this. Put your private key and certificate in `ssl/chef-server.key` and `ssl/chef-server.crt`. Make sure that the certificate is [compatible with nginx](https://www.nginx.com/resources/admin-guide/nginx-ssl-termination/). You should also add your own email address in the `Dockerfile`.
 
-Create a data volue container like this:
+Build your private Docker image and use it instead of this image.
+
+# Data Persistence
+
+Create a data volume container like this:
 
     docker run -ti --name chef-data sappho/chef-server date -R
 
+You can externalise the data volumes for this image in other ways. If you do then ensure that your create all of the required volumes:
+
+* `/etc/opscode`
+* `/etc/opscode-analytics`
+* `/opt/opscode`
+* `/var/opt/opscode`
+* `/var/log/opscode`
+
 # Running a Chef Server Container
 
-Run a server with a command like this:
+When using a data volume container, run Chef Server with a command like this:
 
-    docker run -ti --name chef -h chef.example.com --privileged --volumes-from chef-data -p 443:443 \
+    docker run -ti --name chef --hostname chef.example.com --privileged \
+        --volumes-from chef-data -p 443:443 \
         -d --restart always sappho/chef-server
 
 This will cause one of two initialisation processes to run, depending on context:
@@ -35,6 +50,8 @@ This will cause one of two initialisation processes to run, depending on context
     * Chef Server is bootstrapped to a full build.
     * The embedded nginx web server is provisioned with a private key and a corresponding self-signed certificate.
 * If this is a new server container using an existing data container then the already bootstrapped Chef Server is simply started again.
+
+The `--hostname` switch value is important. It should precisely correspond to the common name in your SSL certificate. If this isn't so then your Chef Server will likely appear to run correctly but will present odd behaviour when creating users and organisations or when accessing the API.
 
 Chef Server runs as a set of background daemon processes so the logs are continuously tailed to the console in the foreground to keep this container running. You can therefore monitor the logs with:
 
@@ -47,7 +64,7 @@ Watch the logs carefully at startup, in particular when building a new server, w
     2016-04-05_22:42:44.15361 [info] Application eper started on node 'erchef@127.0.0.1'
     2016-04-05_22:42:44.15373 [info] Application efast_xs started on node 'erchef@127.0.0.1'
 
-You can destroy the Chef Server container and rebuild it at any time, but take care of your data volume container.
+You can destroy the Chef Server container and rebuild it at any time, but take care of your data volume container, or other data storage.
 
 # Maintenance and Management
 
@@ -56,7 +73,3 @@ To run server maintenance and management tasks with [chef-server-ctl](https://do
     docker exec -ti chef chef-server-ctl status
 
 You can run any of the available `chef-server-ctl` command variants.
-
-# Using a Properly Generated SSL Private Key and Certificate
-
-You should generate a permanent private key and corresponding certficate at your certificate authority of choice. Get [nginx format files](https://www.nginx.com/resources/admin-guide/nginx-ssl-termination/).
