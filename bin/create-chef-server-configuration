@@ -1,4 +1,5 @@
 #!/bin/bash
+# See https://docs.chef.io/config_rb_server.html
 cat > /etc/opscode/chef-server.rb <<EOF
 api_fqdn '`cat /etc/hostname`'
 ip_version 'ipv4'

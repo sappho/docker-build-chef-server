@@ -23,7 +23,10 @@ EXPOSE 443
 
 CMD start-chef-server
 
+# Added to the image to trace back to the Debian package used to build a server
 ENV DOWNLOAD_LINK $download_link
+
+# Override this email address in a private image or when running a server container
 ENV NOTIFICATION_EMAIL nobody@example.com
 
 ADD etc /etc/

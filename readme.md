@@ -20,7 +20,7 @@ The source code for this image is on GitHub at [sappho/docker-build-chef-server]
 
 To use Chef Server in a production environment, and really any environment, you should use a properly generated private key and SSL certificate to secure access to the exposed HTTPS port. While this Docker image can be run as is, you should create and build your own image which adds your private key and SSL certificate. You can fork [a sample GitHub repository](https://github.com/sappho/docker-build-chef-server-ssl) to help with this. Put your private key and certificate in `ssl/chef-server.key` and `ssl/chef-server.crt`. Make sure that the certificate is [compatible with nginx](https://www.nginx.com/resources/admin-guide/nginx-ssl-termination/). You should also add your own email address in the `Dockerfile`.
 
-Build your private Docker image and use it instead of this image.
+Build your private Docker image and use it instead of this image. Rebuid your private image when you need to update your private key and certificate, and then destroy and re-run your server container to redeploy.
 
 # Data Persistence
 
@@ -73,6 +73,16 @@ To run server maintenance and management tasks with [chef-server-ctl](https://do
     docker exec -ti chef chef-server-ctl status
 
 You can run any of the available `chef-server-ctl` command variants.
+
+# Reconfiguration
+
+This image injects configuration into `/etc/opscode/chef-server.rb`. If you need to change the configuration in this file then run a command like this:
+
+    docker exec -ti chef vi /etc/opscode/chef-server.rb
+
+Then follow up with:
+
+    docker exec -ti chef chef-server-ctl reconfigure
 
 # Log Rotation
 
