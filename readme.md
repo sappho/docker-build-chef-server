@@ -1,8 +1,10 @@
-# References
+# Challenges of Running Chef Server in a Docker Container
 
-* https://github.com/chef/chef-server/issues/435
-* https://docs.chef.io/install_server.html
-* https://hub.docker.com/r/xmik/chef-server-docker/
+[Chef Server](https://www.chef.io/chef/) is a collection of a number of services that all normally run as background daemons - somewhat different to the normal Docker thing of interconnected single-app containers. This image is built on the standard Ubuntu Trusty image but I'm looking into the possibility that it should be based on something like the [Phusion Base Image](http://phusion.github.io/baseimage-docker/) - watch this space.
+
+All the processes run as background daemons, and tailing their logs in the foreground keeps the container running and makes log access easy. However, stopping the container with `docker stop`, or when the Docker daemon stops, will cause the Chef Server daemons inside the container to simply be killed. My tests so far suggest that there's no problem with doing this, but this is far from a certainty - beware!
+
+Because there will be no `cron` process in the container I have added `/etc/cron.hourly/opc_logrotate` to the image. It's a copy of the script installed by the Chef Server installation process.
 
 # This Docker Image
 

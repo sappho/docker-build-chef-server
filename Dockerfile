@@ -28,3 +28,4 @@ ENV NOTIFICATION_EMAIL nobody@example.com
 
 ADD etc /etc/
 ADD bin /usr/local/bin/
+RUN ln -s /etc/cron.hourly/opc_logrotate /usr/local/bin/opc_logrotate
