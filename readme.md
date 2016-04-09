@@ -73,3 +73,9 @@ To run server maintenance and management tasks with [chef-server-ctl](https://do
     docker exec -ti chef chef-server-ctl status
 
 You can run any of the available `chef-server-ctl` command variants.
+
+# Log Rotation
+
+To rotate the logs run:
+
+    docker exec -ti chef opc_logrotate
