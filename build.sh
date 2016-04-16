@@ -3,7 +3,7 @@ set -e
 
 version=12.5.0
 majorVersion=12.5
-download_link=https://packages.chef.io/stable/ubuntu/14.04/chef-server-core_${version}_amd64.deb
+download_link=https://packages.chef.io/stable/ubuntu/14.04/chef-server-core_${version}-1_amd64.deb
 
 directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
