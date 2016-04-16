@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-version=12.4.1-1
-majorVersion=12.4
+version=12.5.0
+majorVersion=12.5
 download_link=https://packages.chef.io/stable/ubuntu/14.04/chef-server-core_${version}_amd64.deb
 
 directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
