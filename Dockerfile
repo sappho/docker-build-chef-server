@@ -21,7 +21,7 @@ VOLUME /var/log/opscode
 
 EXPOSE 443
 
-CMD start-chef-server
+ENTRYPOINT start-chef-server
 
 # Added to the image to trace back to the Debian package used to build a server
 ENV DOWNLOAD_LINK $download_link
