@@ -21,7 +21,8 @@ VOLUME /var/log/opscode
 
 EXPOSE 443
 
-ENTRYPOINT start-chef-server
+# start script needs to run as PID 1 so array form needed ...
+CMD ["start-chef-server"]
 
 # Added to the image to trace back to the Debian package used to build a server
 ENV DOWNLOAD_LINK $download_link
