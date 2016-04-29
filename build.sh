@@ -7,7 +7,7 @@ download_link=https://packages.chef.io/stable/ubuntu/14.04/chef-server-core_${ve
 
 directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-docker pull ubuntu:trusty
+docker pull phusion/baseimage
 
 echo Building image from $download_link
 
