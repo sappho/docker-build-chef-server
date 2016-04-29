@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM phusion/baseimage
 
 MAINTAINER Andrew Heald <andrew@heald.uk>
 
@@ -22,7 +22,7 @@ VOLUME /var/log/opscode
 EXPOSE 443
 
 # start script needs to run as PID 1 so array form needed ...
-CMD ["start-chef-server"]
+CMD ["/sbin/my_init"]
 
 # Added to the image to trace back to the Debian package used to build a server
 ENV DOWNLOAD_LINK $download_link
@@ -31,5 +31,3 @@ ENV DOWNLOAD_LINK $download_link
 ENV NOTIFICATION_EMAIL nobody@example.com
 
 ADD etc /etc/
-ADD bin /usr/local/bin/
-RUN ln -s /etc/cron.hourly/opc_logrotate /usr/local/bin/opc_logrotate

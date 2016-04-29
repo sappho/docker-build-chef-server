@@ -1,12 +1,10 @@
 [![Travis](https://img.shields.io/travis/sappho/docker-build-chef-server.svg?style=flat-square)](https://travis-ci.org/sappho/docker-build-chef-server) [![GitHub issues](https://img.shields.io/github/issues/sappho/docker-build-chef-server.svg?style=flat-square)](https://github.com/sappho/docker-build-chef-server/issues) [![GitHub repository](https://img.shields.io/badge/GitHub-master-blue.svg?style=flat-square)](https://github.com/sappho/docker-build-chef-server) [![GitHub forks](https://img.shields.io/github/forks/sappho/docker-build-chef-server.svg?style=flat-square)](https://github.com/sappho/docker-build-chef-server/network) [![GitHub stars](https://img.shields.io/github/stars/sappho/docker-build-chef-server.svg?style=flat-square)](https://github.com/sappho/docker-build-chef-server/stargazers) [![Docker stars](https://img.shields.io/docker/stars/sappho/chef-server.svg?style=flat-square)](https://hub.docker.com/r/sappho/chef-server/) [![Docker pulls](https://img.shields.io/docker/pulls/sappho/chef-server.svg?style=flat-square)](https://hub.docker.com/r/sappho/chef-server/) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/sappho/docker-build-chef-server/master/LICENSE)
 
-# Challenges
+# Background
 
-[Chef Server](https://www.chef.io/chef/) is a collection of a number of services that all normally run as background daemons - somewhat different to the normal Docker thing of interconnected single-app containers. This image is built on the standard Ubuntu Trusty image but I'm looking into the possibility that it should be based on something like the [Phusion Base Image](http://phusion.github.io/baseimage-docker/) - watch this space.
+[Chef Server](https://www.chef.io/chef/) is a collection of a number of services that all normally run as background daemons - somewhat different to the normal Docker thing of interconnected single-app containers. This image is now built on top of the [Phusion Base Image](http://phusion.github.io/baseimage-docker/), which turns out to be the only decent way to spin up a Chef Server.
 
-All the processes run as background daemons, and tailing their logs in the foreground keeps the container running and makes log access easy. However, stopping the container with `docker stop`, or when the Docker daemon stops, will cause the Chef Server daemons inside the container to simply be killed. My tests so far suggest that there's no problem with doing this, but this is far from a certainty - beware!
-
-Because there will be no `cron` process in the container I have added `/etc/cron.hourly/opc_logrotate` to the image. It's a copy of the script installed by the Chef Server installation process.
+All the processes run as background daemons, and tailing their logs in the foreground keeps the container running and makes log access easy.
 
 # This Docker Image
 
@@ -44,14 +42,21 @@ When using a data volume container, run Chef Server with a command like this:
         --volumes-from chef-data -p 443:443 \
         -d --restart always sappho/chef-server
 
-This will cause one of two initialisation processes to run, depending on context:
-
-* If this is a first run against an empty, newly created, data volume container:
-    * Chef Server is bootstrapped to a full build.
-    * The embedded nginx web server is provisioned with a private key and a corresponding self-signed certificate.
-* If this is a new server container using an existing data container then the already bootstrapped Chef Server is simply started again.
-
 The `--hostname` switch value is important. It should precisely correspond to the common name in your SSL certificate. If this isn't so then your Chef Server will likely appear to run correctly but will present odd behaviour when creating users and organisations or when accessing the API.
+
+If this is a first run against an empty, newly created, data volume container then Chef Server must be initialised with a follow-up command like this, run after a short delay to let the container fully start up:
+
+    docker exec -ti chef chef-server-ctl reconfigure
+
+This process will take a while - let it run. When it completes without error allow a further minute for the Chef Server to fully come up and initialise, then shut it down again with:
+
+    docker stop chef
+
+From this point on you can start Chef Server with:
+
+    docker start chef
+    
+Or if you've deleted the application container then start it up again with the docker run command above.
 
 Chef Server runs as a set of background daemon processes so the logs are continuously tailed to the console in the foreground to keep this container running. You can therefore monitor the logs with:
 
@@ -83,9 +88,3 @@ This image injects configuration into `/etc/opscode/chef-server.rb`. If you need
 Then follow up with:
 
     docker exec -ti chef chef-server-ctl reconfigure
-
-# Log Rotation
-
-To rotate the logs run:
-
-    docker exec -ti chef opc_logrotate

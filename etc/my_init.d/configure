@@ -8,6 +8,5 @@ rabbitmq['node_ip_address'] = '0.0.0.0'
 nginx['ssl_certificate'] = '/etc/ssl/private/chef-server.crt'
 nginx['ssl_certificate_key'] = '/etc/ssl/private/chef-server.key'
 EOF
-echo Content of /etc/opscode/chef-server.rb ...
-cat /etc/opscode/chef-server.rb
-echo -----------------
+mkdir -p /var/log/opscode/bootstrap
+date -R >/var/log/opscode/bootstrap/current

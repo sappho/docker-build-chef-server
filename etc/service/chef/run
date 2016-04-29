@@ -1,0 +1,8 @@
+#!/bin/bash
+chef-server-ctl start
+function shut_down {
+    chef-server-ctl stop
+    exit 0
+}
+trap shut_down EXIT
+tail -f /var/log/opscode/*/current
